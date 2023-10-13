@@ -14,31 +14,31 @@ const server = net.createServer((socket) => {
 
     const requestString = buffer.toString('utf-8');
 
-    console.log(requestString);
+    // console.log(requestString);
 
 
     const request = parseRequest(requestString)
+    console.log(request);
 
 
-    if (request.path === "/") {
-      socket.write("HTTP/1.1 200 OK \r\n\r\n");
+    if (request.method === "GET" && request.path === "/") {
+      socket.write("HTTP/1.1 200 OK\r\n\r\n");
     } else {
-      socket.write("HTTP/1.1 404 NOT FOUND \r\n\r\n");
+      socket.write("HTTP/1.1 404 NOT FOUND\r\n\r\n");
     }
   })
 
   socket.on('close', () => {
     socket.end();
-    socket.close();
   })
 
 });
 
 const parseRequest = (requestString) => {
   const lines = requestString.split("\r\n")
-  const [startLines] = lines;
+  const [startLine] = lines;
 
-  const [method, path, protocol] = startLines.split(" ")
+  const [method, path, protocol] = startLine.split(" ")
 
   return {
     method,
