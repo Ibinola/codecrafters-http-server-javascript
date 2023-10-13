@@ -10,10 +10,41 @@ const server = net.createServer((socket) => {
     server.close();
   });
 
-  socket.write(`HTTP/1.1 200 OK\r\n\r\n`, () => {
-    socket.end();
-    server.close();
+  socket.on("data", (buffer) => {
+
+    const requestString = buffer.toString('utf-8');
+
+    console.log(requestString);
+
+
+    const request = parseRequest(requestString)
+
+
+    if (request.path === "/") {
+      socket.write("200 OK")
+    } else {
+      socket.write("404 NOT FOUND");
+    }
   })
+  // socket.write(`HTTP/1.1 200 OK\r\n\r\n`, () => {
+  //   socket.end();
+  //   server.close();
+  // })
 });
+
+const parseRequest = (requestString) => {
+
+  const [method, path, protocol] = requestString.split(" ")
+
+  return {
+    method,
+    path,
+    protocol
+  }
+}
+
+
+
+
 
 server.listen(4221, "localhost");
