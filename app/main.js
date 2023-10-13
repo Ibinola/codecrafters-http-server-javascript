@@ -37,7 +37,7 @@ const parseRequest = (requestString) => {
   const lines = requestString.split("\r\n")
   const [startLines] = lines;
 
-  const [method, path, protocol] = startLines[0].split(" ")
+  const [method, path, protocol] = startLines.split(" ")
 
   return {
     method,
