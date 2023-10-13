@@ -28,7 +28,8 @@ const server = net.createServer((socket) => {
     }
   })
 
-  socket.on('close', () => {
+  socket.write(response, () => {
+    console.log("Response with status code: " + response);
     socket.end();
   })
 
