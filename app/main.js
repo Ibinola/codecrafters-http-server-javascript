@@ -36,9 +36,9 @@ const server = net.createServer((socket) => {
 
 const parseRequest = (requestString) => {
   const lines = requestString.split("\r\n")
-  const [startLine] = lines;
+  const [startLines] = lines;
 
-  const [method, path, protocol] = startLine.split(" ")
+  const [method, path, protocol] = startLines.split(" ")
 
   return {
     method,
