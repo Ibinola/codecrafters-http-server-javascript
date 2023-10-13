@@ -23,15 +23,13 @@ const server = net.createServer((socket) => {
 
     if (request.method === "GET" && request.path === "/") {
       socket.write("HTTP/1.1 200 OK\r\n\r\n");
+      socket.end();
     } else {
       socket.write("HTTP/1.1 404 NOT FOUND\r\n\r\n");
+      socket.end();
     }
   })
 
-  socket.write(response, () => {
-    console.log("Response with status code: " + response);
-    socket.end();
-  })
 
 });
 
@@ -39,7 +37,7 @@ const parseRequest = (requestString) => {
   const lines = requestString.split("\r\n")
   const [startLines] = lines;
 
-  const [method, path, protocol] = startLines.split(" ")
+  const [method, path, protocol] = startLines[0].split(" ")
 
   return {
     method,
@@ -47,5 +45,10 @@ const parseRequest = (requestString) => {
     protocol
   }
 }
+
+server.on('close', () => {
+  socket.end();
+  socket.close();
+})
 
 server.listen(4221, "localhost");
