@@ -5,7 +5,10 @@ console.log("Logs from your program will appear here!");
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
-
+  socket.on("close", () => {
+    socket.end();
+    server.close();
+  });
 
   socket.on("data", (buffer) => {
 
@@ -18,19 +21,24 @@ const server = net.createServer((socket) => {
 
 
     if (request.path === "/") {
-      socket.write("HTTP/1.1 200 OK \r\n\r\n")
+      socket.write("HTTP/1.1 200 OK \r\n\r\n");
     } else {
       socket.write("HTTP/1.1 404 NOT FOUND \r\n\r\n");
     }
+  })
+
+  socket.on('close', () => {
+    socket.end();
+    socket.close();
+  })
 
 });
 
 const parseRequest = (requestString) => {
+  const lines = requestString.split("\r\n")
+  const [startLines] = lines;
 
-  const lines = requestString.split("\r\n");
-  const [startLine] = lines;
-
-  const [method, path, protocol] = startLine.split(" ")
+  const [method, path, protocol] = startLines.split(" ")
 
   return {
     method,
@@ -38,9 +46,5 @@ const parseRequest = (requestString) => {
     protocol
   }
 }
-
-
-
-
 
 server.listen(4221, "localhost");
