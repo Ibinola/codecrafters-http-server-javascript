@@ -13,16 +13,19 @@ const server = net.createServer((socket) => {
   socket.on("data", (buffer) => {
 
     const requestString = buffer.toString('utf-8');
-
-    // console.log(requestString);
-
-
     const request = parseRequest(requestString)
     console.log(request);
 
 
-    if (request.method === "GET" && request.path === "/") {
-      socket.write("HTTP/1.1 200 OK\r\n\r\n");
+
+    if (request.method === "GET" && request.path.startWith("/echo")) {
+
+      const string = request.path.substring(6);
+
+      const response = `HTTP/1.1 200 OK\r\n\Content-Type: text/plain\r\n\Content-Length: ${string.length}\r\n\r\n${string}`;
+
+
+      socket.write(response);
       socket.end();
     } else {
       socket.write("HTTP/1.1 404 NOT FOUND\r\n\r\n");
