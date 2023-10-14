@@ -20,9 +20,9 @@ const server = net.createServer((socket) => {
 
     if (request.method === "GET" && request.path === "/") {
 
-      const string = request.path.substring(6);
+      const string = request.path.split("/").slice(2).join("/");
 
-      const response = `HTTP/1.1 200 OK\r\n\Content-Type: text/plain\r\n\Content-Length: ${string.length}\r\n\r\n${string}`;
+      const response = `HTTP/1.1 200 OK \r\n\ Content-Type: text/plain\r\n\ Content-Length: ${string.length}\r\n\r\n${string}`;
 
 
       socket.write(response);
