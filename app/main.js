@@ -54,9 +54,9 @@ const parseRequest = (requestString) => {
 const formatResponse = (path) => {
   let response = 'HTTP/1.1'
 
-  if(path == "/"){
+  if (path == "/") {
     return response + " 200 OK \r\n\r\n"
-  } else if(path !== "/") {
+  } else if (path.split("/")[1] !== "echo") {
     return response + " 404 NOT FOUND \r\n\r\n";
   }
 
