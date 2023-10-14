@@ -17,20 +17,22 @@ const server = net.createServer((socket) => {
     console.log(request);
 
 
+    let response = formatResponse(request.path);
+    socket.write(response);
+    socket.end();
+    // if (request.method === "GET" && request.path === "/") {
 
-    if (request.method === "GET" && request.path === "/") {
+    //   const string = request.path.split("/").slice(2).join("/");
 
-      const string = request.path.split("/").slice(2).join("/");
-
-      const response = `HTTP/1.1 200 OK \r\n\ Content-Type: text/plain\r\n\ Content-Length: ${string.length}\r\n\r\n${string}`;
+    //   const response = `HTTP/1.1 200 OK \r\n\ Content-Type: text/plain\r\n\ Content-Length: ${string.length}\r\n\r\n${string}`;
 
 
-      socket.write(response);
-      socket.end();
-    } else {
-      socket.write("HTTP/1.1 404 NOT FOUND\r\n\r\n");
-      socket.end();
-    }
+    //   socket.write(response);
+    //   socket.end();
+    // } else {
+    //   socket.write("HTTP/1.1 404 NOT FOUND\r\n\r\n");
+    //   socket.end();
+    // }
   })
 
 
@@ -47,6 +49,22 @@ const parseRequest = (requestString) => {
     path,
     protocol
   }
+}
+
+const formatResponse = (path) => {
+  let response = 'HTTP/1.1'
+
+  if(path == "/"){
+    return response + " 200 OK \r\n\r\n"
+  } else if(path !== "/") {
+    return response + " 404 NOT FOUND \r\n\r\n";
+  }
+
+  response = "HTTP/1.1 200 OK \r\nContent-Type: text/plain\r\n";
+  const randomString = path.split("/").slice(2).join("/");
+  response += `Content-Length: ${randomString.length}\r\n\r\n${randomString}`;
+
+  return response;
 }
 
 server.on('close', () => {
