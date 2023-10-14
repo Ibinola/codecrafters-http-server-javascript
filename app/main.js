@@ -18,7 +18,7 @@ const server = net.createServer((socket) => {
 
 
 
-    if (request.method === "GET" && request.path.startsWith("/echo")) {
+    if (request.method === "GET" && request.path === "/") {
 
       const string = request.path.substring(6);
 
